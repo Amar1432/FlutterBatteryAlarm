@@ -1,14 +1,17 @@
+import 'dart:async';
+
 import 'package:battery_alarm/controller/batteryController.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BatteryController batteryController = Get.put(BatteryController());
     var battery = Battery();
-    
+
     // checkBattery() async {
     //   batteryController.batteryStatus.value = await battery.batteryLevel;
     // }
@@ -23,7 +26,10 @@ class MyHomePage extends StatelessWidget {
         batteryController.chargingMsg.value =
             "Your mobile is discharging only ${batteryController.batteryStatus.value} left";
       } else if (event == BatteryState.full) {
-        print('Battery Full');
+        FlutterRingtonePlayer.playRingtone();
+        Timer(Duration(seconds: 30), () {
+          FlutterRingtonePlayer.stop();
+        });
       } else if (event == BatteryState.unknown) {
         print('Something went wrong can not display battery data');
       }
